@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arena Pro - Official Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables for Ultra-Premium Look */
+        :root {
+            --bg-base: #030305;
+            --bg-surface: rgba(255, 255, 255, 0.02);
+            --neon-accent: #00d2ff;
+            --neon-glow: rgba(0, 210, 255, 0.4);
+            --text-primary: #ffffff;
+            --text-secondary: #8892b0;
+            --border-glass: rgba(255, 255, 255, 0.05);
+            --font-display: 'Syncopate', sans-serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Ambient Background Glow */
+        .ambient-glow {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(0,210,255,0.08) 0%, rgba(0,0,0,0) 70%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            color: var(--text-primary);
+            letter-spacing: 2px;
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #fff, var(--neon-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Floating Glass Navbar */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 100px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .nav-brand img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-accent);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: 0.3s ease;
+        }
+
+        /* Mobile Fullscreen Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background: rgba(3, 3, 5, 0.98);
+            backdrop-filter: blur(30px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.4s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .mobile-menu a {
+            text-decoration: none;
+            font-family: var(--font-display);
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        /* Hero Section */
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 5%;
+            padding-top: 80px;
+            position: relative;
+        }
+
+        .hero-icon-container {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-icon-container::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 120%; height: 120%;
+            transform: translate(-50%, -50%);
+            background: var(--neon-glow);
+            filter: blur(40px);
+            z-index: -1;
+        }
+
+        .hero-icon {
+            width: 140px;
+            height: 140px;
+            border-radius: 32px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-base);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.03);
+            color: var(--text-primary);
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 5%;
+        }
+
+        /* Glass Cards */
+        .glass-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 3rem;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+
+        /* Play Store Style Mobile Scroll */
+        .screenshot-wrapper {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .screenshot-grid {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 2rem;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .screenshot-grid::-webkit-scrollbar {
+            display: none; /* Chrome */
+        }
+
+        .screenshot-item {
+            flex: 0 0 calc(25% - 15px);
+            scroll-snap-align: center;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-glass);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-accent);
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* App Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+        }
+
+        .info-block h4 {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-block p {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Content Sections (Desc & Privacy) */
+        .content-group {
+            margin-bottom: 3rem;
+        }
+
+        .content-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .content-group h3 {
+            font-family: var(--font-sans);
+            font-size: 1.2rem;
+            color: var(--neon-accent);
+            margin-bottom: 1rem;
+            letter-spacing: 0;
+        }
+
+        .content-group p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        /* Download Section */
+        .download-box {
+            text-align: center;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(0,210,255,0.05) 100%);
+        }
+
+        .file-meta {
+            display: block;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 4rem 5%;
+            border-top: 1px solid var(--border-glass);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Image Modal */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            font-family: var(--font-sans);
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Mobile Design */
+        @media (max-width: 992px) {
+            .screenshot-item { flex: 0 0 calc(50% - 10px); }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                width: 100%;
+                top: 0;
+                border-radius: 0;
+                border: none;
+                border-bottom: 1px solid var(--border-glass);
+                padding: 1rem 5%;
+            }
+
+            .nav-links { display: none; }
+            .menu-toggle { display: flex; }
+
+            .cta-group {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn { width: 100%; }
+
+            .screenshot-item { flex: 0 0 85%; } /* Native App Store horizontal swipe */
+
+            .glass-panel { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Background -->
+    <div class="ambient-glow"></div>
+
+    <!-- Floating Navbar -->
+    <nav id="navbar">
+        <div class="nav-brand">
+            <img src="icon.png" alt="Arena Pro">
+            <span>ARENA PRO</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#preview">Preview</a></li>
+            <li><a href="#specs">Specs</a></li>
+            <li><a href="#privacy">Privacy</a></li>
+        </ul>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Mobile Fullscreen Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#about" class="menu-item">About</a>
+        <a href="#preview" class="menu-item">Preview</a>
+        <a href="#specs" class="menu-item">Specs</a>
+        <a href="#privacy" class="menu-item">Privacy</a>
+        <a href="#download" class="menu-item text-gradient">Download</a>
+    </div>
+
+    <!-- Hero Section -->
+    <header>
+        <div class="hero-icon-container reveal">
+            <img src="icon.png" alt="Arena Pro Icon" class="hero-icon">
+        </div>
+        <h1 class="hero-title reveal">Arena <span class="text-gradient">Pro</span></h1>
+        <p class="hero-subtitle reveal">A Competitive Battle Experience Engineered for Precision. Dominate the arena with pure skill and zero latency.</p>
+        <div class="cta-group reveal">
+            <a href="arena pro.apk" download class="btn btn-primary">Install APK</a>
+            <a href="#preview" class="btn btn-secondary">View Gameplay</a>
+        </div>
+    </header>
+
+    <!-- App Specs Panel -->
+    <section id="specs" class="container reveal">
+        <div class="glass-panel">
+            <div class="info-grid">
+                <div class="info-block">
+                    <h4>Version</h4>
+                    <p>1.0.0 (Stable)</p>
+                </div>
+                <div class="info-block">
+                    <h4>Genre</h4>
+                    <p>board game/ Esports</p>
+                </div>
+                <div class="info-block">
+                    <h4>Platform</h4>
+                    <p>Android OS</p>
+                </div>
+                <div class="info-block">
+                    <h4>Architecture</h4>
+                    <p>64-bit Optimized</p>
+                </div>
+                <div class="info-block">
+                    <h4>Studio</h4>
+                    <p>Riser Truth Studios</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Carousel -->
+    <section id="preview" class="container reveal">
+        <div class="section-header">
+            <h2>Combat <span class="text-gradient">Preview</span></h2>
+        </div>
+        <div class="screenshot-wrapper">
+            <div class="screenshot-grid">
+                <div class="screenshot-item" onclick="openModal('shot.jpg')">
+                    <img src="shot.jpg" alt="Gameplay 1">
+                </div>
+                <div class="screenshot-item" onclick="openModal('shot1.jpg')">
+                    <img src="shot1.jpg" alt="Gameplay 2">
+                </div>
+                <div class="screenshot-item" onclick="openModal('shot2.jpg')">
+                    <img src="shot2.jpg" alt="Gameplay 3">
+                </div>
+                <div class="screenshot-item" onclick="openModal('shot3.jpg')">
+                    <img src="shot3.jpg" alt="Gameplay 4">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Description -->
+    <section id="about" class="container reveal">
+        <div class="section-header">
+            <h2>System <span class="text-gradient">Architecture</span></h2>
+        </div>
+        <div class="glass-panel">
+            <div class="content-group">
+                <h3>Core Mechanics</h3>
+                <p>MMR System: 6 ranks from Bronze to Master.
+Economy: Earn Credits for themes and emotes.
+Lobbies: Ranked, Casual, and Custom Best-of-X.
+Esports Grade</p>
+            </div>
+            <div class="content-group">
+                <h3>Esports Grade Performance</h3>
+                <p>Design: 3D tactile cells with glassmorphism.
+Speed: Zero-latency Firebase sync.
+Matchmaking: Smart radar-based skill pairing..</p>
+            </div>
+            <div class="content-group">
+                <h3>Pure Skill Environment</h3>
+                <p>sms. Tactical awareness, reflex speed, and team coordination are the only metrics that dictate victory. The HUD is strictly minimalist, prioritizing battlefield visibility over aggressive UI</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Privacy Policy -->
+    <section id="privacy" class="container reveal">
+        <div class="section-header">
+            <h2>Data <span class="text-gradient">Integrity</span></h2>
+        </div>
+        <div class="glass-panel">
+            <div class="content-group">
+                <h3>Strict Privacy Protocol</h3>
+                <p>Riser Truth Studios mandates absolute respect for user data. Arena Pro operates entirely independently of invasive third-party telemetry. We do not harvest personal identifiers, background location, or sensitive device information.</p>
+            </div>
+            <div class="content-group">
+                <h3>Data Utilization</h3>
+                <p>Any data transmission is isolated strictly to encrypted matchmaking handshakes and anonymous crash diagnostics required to maintain server stability. Background tracking without explicit user consent is technically restricted within the client.</p>
+            </div>
+            <div class="content-group">
+                <h3>Local Permissions</h3>
+                <p>The application only executes requests for essential local storage allocation to cache game assets. Extraneous hardware components (such as microphone or camera) remain unaccessed unless initiated by the player for authorized in-game comms.</p>
+            </div>
+            <div class="content-group">
+                <h3>Zero Unauthorized Sharing</h3>
+                <p>Under no circumstances is operational data brokered, sold, or shared with external marketing entities. Your presence in the arena is secure, private, and encrypted via industry-standard protocols.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final Download -->
+    <section id="download" class="container reveal">
+        <div class="glass-panel download-box">
+            <img src="icon.png" alt="Icon" style="width: 64px; border-radius: 16px; margin-bottom: 1.5rem;">
+            <h2 style="margin-bottom: 2rem;">Deploy Client</h2>
+            <a href="arena pro.apk" download class="btn btn-primary" style="padding: 1.5rem 4rem; font-size: 1rem;">
+                Download APK
+            </a>
+            <span class="file-meta">Version 1.0.0 • Verified Secure Download</span>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Arena Pro &copy; 2026 Riser Truth Studios.</p>
+        <p>Engineered for Professional Play.</p>
+    </footer>
+
+    <!-- Fullscreen Image Modal -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <span class="close-btn">&times;</span>
+        <img id="modalImg" src="" alt="Enlarged Gameplay">
+    </div>
+
+    <!-- Core Scripts -->
+    <script>
+        // Smooth Reveal Animation on Scroll
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+        revealElements.forEach(el => observer.observe(el));
+
+        // Mobile Menu Toggle Logic
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuItems = document.querySelectorAll('.menu-item');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if(isMenuOpen) {
+                mobileMenu.classList.add('active');
+                menuToggle.children[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                menuToggle.children[1].style.opacity = '0';
+                menuToggle.children[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileMenu.classList.remove('active');
+                menuToggle.children[0].style.transform = 'none';
+                menuToggle.children[1].style.opacity = '1';
+                menuToggle.children[2].style.transform = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        menuItems.forEach(item => item.addEventListener('click', toggleMenu));
+
+        // Modal Image Viewer
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+
+        function openModal(src) {
+            modalImg.src = src;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
